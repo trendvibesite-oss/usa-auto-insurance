@@ -1,0 +1,648 @@
+/* ============================================================
+   AUTO INSURANCE LOCAL SERVICE WEBSITE — LIGHTWEIGHT STYLESHEET
+   Matches colors and styles of pestcontrol.grace-prayers.com
+   ============================================================ */
+
+:root {
+  --theme-color: #0e78c0;
+  --theme-dark-color: #ab1d21;
+  --theme-color-light: #C9FFC9;
+  --text-color: #000000;
+  --bg-color: #ffffff;
+  --gray-bg: #f4f4f4;
+  --border-color: #ddd;
+}
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+ul, ol, li {
+  list-style: none !important;
+  list-style-type: none !important;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  line-height: 1.6;
+}
+
+body {
+  font-size: 16px;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+
+/* ---------- Utilities ---------- */
+.w3-container {
+  padding: 0.01em 16px;
+}
+.w3-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.w3-center {
+  text-align: center;
+}
+.w3-clear::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.w3-row::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.w3-row-padding {
+  padding: 0 8px;
+}
+.w3-row-padding > .w3-col, .w3-row-padding > .w3-half {
+  padding: 0 8px;
+}
+
+.pad0 {
+  padding: 0 !important;
+}
+.pad-sides-10 {
+  padding: 0 10px !important;
+}
+
+/* Grid System */
+.w3-col {
+  float: left;
+  width: 100%;
+}
+.w3-half {
+  float: left;
+  width: 50%;
+}
+
+@media (min-width: 601px) {
+  .w3-col.s12.m6.l4 {
+    width: 50%;
+  }
+}
+
+@media (min-width: 993px) {
+  .w3-col.s12.m6.l4 {
+    width: 33.33333%;
+  }
+}
+
+/* ---------- Header ---------- */
+.headerStyle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.headerLine1Style {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 30px;
+  background: #ffffff;
+}
+
+.LogoDesktop span {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--theme-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header_line1_phone a {
+  color: var(--theme-color);
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.header_line1_phone a:hover {
+  color: var(--theme-dark-color);
+}
+
+.headerLine2Style {
+  background-color: var(--theme-color);
+  color: #ffffff;
+  padding: 0;
+  position: relative;
+}
+
+.toggleMenu {
+  display: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  background: var(--theme-color);
+  color: #ffffff;
+  align-items: center;
+}
+
+.box-shadow-menu {
+  display: inline-block;
+  width: 20px;
+  height: 2px;
+  background: #ffffff;
+  position: relative;
+  margin-right: 10px;
+}
+.box-shadow-menu::before, .box-shadow-menu::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 20px;
+  height: 2px;
+  background: #ffffff;
+}
+.box-shadow-menu::before {
+  top: -6px;
+}
+.box-shadow-menu::after {
+  bottom: -6px;
+}
+
+.menu nav ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+}
+
+.menu nav ul li {
+  position: relative;
+}
+
+.menu nav ul li a {
+  display: block;
+  padding: 14px 20px;
+  color: #ffffff;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.menu nav ul li a:hover {
+  background-color: var(--theme-dark-color);
+}
+
+/* Dropdown Menu */
+.menu nav ul li.has-sub ul {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--theme-color);
+  min-width: 240px;
+  flex-direction: column;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+
+.menu nav ul li.has-sub ul li a {
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.menu nav ul li.has-sub:hover ul {
+  display: flex;
+}
+
+.sub-arrow {
+  margin-left: 5px;
+  font-size: 11px;
+}
+
+/* Mobile Menu Header Elements */
+.smallScreenHeader {
+  display: none;
+}
+
+.mainTopSpacer {
+  height: 120px;
+}
+
+/* ---------- Hero Banner ---------- */
+.center-cropped {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 380px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.center-cropped::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.center-cropped img {
+  display: none;
+}
+
+/* ---------- Content Styling ---------- */
+.contentX {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 30px 15px;
+}
+
+.headingTxt h1 {
+  font-size: 32px;
+  color: var(--theme-color);
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 26px;
+  color: var(--theme-color);
+  margin: 25px 0 15px;
+  font-weight: bold;
+}
+
+h3 {
+  font-size: 22px;
+  color: var(--theme-color);
+  margin: 20px 0 10px;
+  font-weight: bold;
+}
+
+p {
+  margin-bottom: 15px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333333;
+}
+
+ul {
+  margin-bottom: 15px;
+  padding-left: 20px;
+}
+
+ul li {
+  margin-bottom: 8px;
+  list-style-type: disc;
+}
+
+strong {
+  font-weight: bold;
+  color: #000000;
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+  font-size: 14px;
+  margin-bottom: 20px;
+  color: #666;
+}
+.breadcrumbs a {
+  color: var(--theme-color);
+}
+.breadcrumbs a:hover {
+  text-decoration: underline;
+}
+.breadcrumbs span.separator {
+  margin: 0 8px;
+}
+
+/* ---------- CTA Box ---------- */
+hr {
+  border: 0;
+  height: 1px;
+  background: var(--border-color);
+  margin: 25px 0;
+}
+
+.phoneNumber {
+  color: var(--theme-color);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.phoneNumber:hover {
+  color: var(--theme-dark-color);
+}
+
+.primaryPhone {
+  color: var(--theme-color);
+}
+
+.cta-box {
+  background-color: var(--theme-color-light);
+  border: 2px solid var(--theme-color);
+  padding: 20px;
+  border-radius: 6px;
+  text-align: center;
+  margin: 25px 0;
+}
+
+.cta-box h3 {
+  margin-top: 0;
+  color: var(--theme-dark-color);
+}
+
+.cta-box .phone-link {
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--theme-dark-color);
+  display: block;
+  margin: 10px 0;
+  text-decoration: none;
+}
+
+.cta-box .phone-link:hover {
+  color: var(--theme-color);
+}
+
+/* ---------- Service Cards ---------- */
+.specials-2card {
+  border: 1px solid var(--border-color);
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+}
+
+.specials-2card h3 {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.specials-2card h3 a {
+  color: var(--theme-color);
+}
+.specials-2card h3 a:hover {
+  color: var(--theme-dark-color);
+}
+
+/* ---------- Service Area Page ---------- */
+.serviceTownPage h1 {
+  font-size: 30px;
+  margin-bottom: 20px;
+  color: var(--theme-color);
+}
+
+.townServiceList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.townServiceList p {
+  background: var(--gray-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 12px 20px;
+  margin-bottom: 0;
+}
+
+.townServiceList p a {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--theme-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.townServiceList p a:hover {
+  color: var(--theme-dark-color);
+}
+
+/* ---------- Footer ---------- */
+footer {
+  background-color: #333333;
+  color: #ffffff;
+  padding: 30px 0;
+  margin-top: 50px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.useboxright {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.useboxright p {
+  color: #dddddd;
+  margin-bottom: 15px;
+}
+
+.callNoDiv {
+  margin: 20px 0;
+}
+
+.phoneList {
+  list-style: none;
+  padding: 0;
+}
+
+.phoneList li a {
+  font-size: 28px;
+  font-weight: bold;
+  color: #ffffff;
+  text-decoration: none;
+  background-color: var(--theme-dark-color);
+  padding: 8px 20px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.phoneList li a:hover {
+  background-color: var(--theme-color);
+}
+
+.phoneSmall {
+  font-size: 18px;
+  margin-top: 5px;
+  color: #cccccc;
+}
+
+.privacyPolicy {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.footerDivMn {
+  text-align: center;
+  border-top: 1px solid #444444;
+  padding-top: 15px;
+  margin-top: 20px;
+  color: #888888;
+}
+
+/* ---------- Cities Grid (Bottom Navigation) ---------- */
+.cities-grid-title {
+  margin-top: 40px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.cities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin-top: 15px;
+  padding: 0 15px;
+}
+
+.cities-grid a {
+  display: block;
+  background: var(--gray-bg);
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  text-align: center;
+  border-radius: 4px;
+  font-size: 14px;
+  color: var(--theme-color);
+}
+
+.cities-grid a:hover {
+  background: var(--theme-color);
+  color: #ffffff;
+  border-color: var(--theme-color);
+}
+
+/* ---------- State Groups Listing ---------- */
+.state-group-header {
+  background-color: var(--theme-color);
+  color: #ffffff;
+  padding: 8px 15px;
+  font-weight: bold;
+  font-size: 18px;
+  margin: 25px 0 15px;
+  border-radius: 4px;
+}
+
+/* ---------- Mobile Responsive Styles ---------- */
+@media (max-width: 768px) {
+  .headerLine1Style {
+    padding: 10px 15px;
+  }
+  
+  .LogoDesktop span {
+    font-size: 20px;
+  }
+  
+  .header_line1_phone {
+    display: none !important;
+  }
+  
+  .toggleMenu {
+    display: flex;
+  }
+  
+  .smallScreenHeader {
+    display: block;
+  }
+  
+  .smallScreenMenuPhone {
+    float: right;
+    padding: 12px 15px;
+  }
+  
+  .smallScreenMenuPhone p {
+    font-size: 10px;
+    background-color: var(--theme-dark-color);
+    color: #ffffff;
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-right: 5px;
+    margin-bottom: 0;
+  }
+  
+  .smallScreenMenuPhone a {
+    color: #ffffff;
+    font-weight: bold;
+  }
+  
+  .menu {
+    display: none;
+    width: 100%;
+    background: var(--theme-color);
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  .menu.active {
+    display: block;
+  }
+  
+  .menu nav ul {
+    flex-direction: column;
+  }
+  
+  .menu nav ul li {
+    width: 100%;
+  }
+  
+  .menu nav ul li a {
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  .menu nav ul li.has-sub ul {
+    position: static;
+    display: none;
+    width: 100%;
+    box-shadow: none;
+    background-color: rgba(0,0,0,0.1);
+  }
+  
+  .menu nav ul li.has-sub.active ul {
+    display: flex;
+  }
+  
+  .mainTopSpacer {
+    height: 110px;
+  }
+  
+  .center-cropped {
+    height: 250px;
+  }
+  
+  .w3-half {
+    width: 100%;
+    float: none;
+  }
+  
+  .cta-box .phone-link {
+    font-size: 24px;
+  }
+}
