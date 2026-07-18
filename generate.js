@@ -17,7 +17,7 @@ const CONFIG = {
   phone: '833-246-4560',
   phoneFormatted: '(833) 246-4560',
   phoneTel: 'tel:+18332464560',
-  domain: 'https://autoinsurance.example.com', // Replace with active domain
+  domain: 'https://auto-insurance.businesstraverse.com',
   outputDir: path.join(__dirname, 'dist'),
   dataDir: path.join(__dirname, 'data'),
   assetsDir: path.join(__dirname, 'assets'),
@@ -215,6 +215,7 @@ function run() {
     <meta name="twitter:title" content="${title}">
     <meta name="twitter:description" content="${description}">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="google-site-verification" content="4ULtB6fHg5E2yim1fYNwdoV2hdKEbp44DQsYI0VL1cI" />
     <style>${minifiedCss}</style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
