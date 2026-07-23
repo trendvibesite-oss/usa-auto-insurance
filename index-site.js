@@ -5,26 +5,19 @@ const path = require('path');
 const CONFIG = {
   domain: 'https://auto-insurance.businesstraverse.com',
   serviceAccountFile: path.join(__dirname, 'service_account.json'),
+  keysFolder: path.join(__dirname, 'keys'),
   stateFile: path.join(__dirname, 'submitted_urls.txt'),
   sitemaps: [
     path.join(__dirname, 'dist', 'sitemap-part-1.xml'),
     path.join(__dirname, 'dist', 'sitemap-part-2.xml')
-  ],
-  dailyLimit: 200
+  ]
 };
 
 // Main Run Pipeline
 async function run() {
   console.log('🚗 Starting Google Indexing API automation...');
 
-  // 1. Verify service account file exists
-  if (!fs.existsSync(CONFIG.serviceAccountFile)) {
-    console.error(`\n❌ ERROR: credentials file not found at: ${CONFIG.serviceAccountFile}`);
-    console.error('Please download your GCP service account JSON key file, rename it to "service_account.json", and place it in the project folder.\n');
-    process.exit(1);
-  }
-
-  // 2. Install googleapis package if missing
+  // 1. Install googleapis package if missing
   try {
     require.resolve('googleapis');
   } catch (e) {
@@ -34,6 +27,30 @@ async function run() {
   }
 
   const { google } = require('googleapis');
+
+  // 2. Load all available JSON keys
+  let keyFiles = [];
+  if (fs.existsSync(CONFIG.keysFolder)) {
+    const files = fs.readdirSync(CONFIG.keysFolder);
+    keyFiles = files.filter(f => f.endsWith('.json')).map(f => path.join(CONFIG.keysFolder, f));
+  }
+  
+  // If keys folder doesn't exist or is empty, fall back to default service_account.json
+  if (keyFiles.length === 0) {
+    if (fs.existsSync(CONFIG.serviceAccountFile)) {
+      keyFiles.push(CONFIG.serviceAccountFile);
+    }
+  }
+
+  if (keyFiles.length === 0) {
+    console.error(`\n❌ ERROR: No credentials found!`);
+    console.error(`Please do one of the following:`);
+    console.error(`1. Place a single key file at: ${CONFIG.serviceAccountFile}`);
+    console.error(`2. Create a folder named "keys" and put one or more JSON key files in it: ${CONFIG.keysFolder}\n`);
+    process.exit(1);
+  }
+
+  console.log(`🔑 Found ${keyFiles.length} service account key file(s) for submission.`);
 
   // 3. Load all URLs from sitemaps
   console.log('📍 Parsing URLs from sitemaps...');
@@ -54,9 +71,9 @@ async function run() {
     }
   });
 
-  console.log(`📊 Found total of ${urls.length} URLs in sitemaps.`);
+  console.log(`📊 Found total of ${urls.length} target combo URLs in sitemaps.`);
   if (urls.length === 0) {
-    console.error('❌ No URLs found. Make sure your site generator has run and generated dist/ folder.');
+    console.error('❌ No target URLs found. Make sure your site generator has run and generated dist/ folder.');
     process.exit(1);
   }
 
@@ -77,52 +94,74 @@ async function run() {
     process.exit(0);
   }
 
-  // 6. Setup Google auth client
-  const auth = new google.auth.GoogleAuth({
-    keyFile: CONFIG.serviceAccountFile,
+  // 6. Process Queue with Key Rotation
+  let keyIndex = 0;
+  let successCount = 0;
+  let urlIndex = 0;
+
+  // Initialize first key client
+  let currentKeyFile = keyFiles[keyIndex];
+  console.log(`\n➡️ Using key [${keyIndex + 1}/${keyFiles.length}]: ${path.basename(currentKeyFile)}`);
+  
+  let auth = new google.auth.GoogleAuth({
+    keyFile: currentKeyFile,
     scopes: ['https://www.googleapis.com/auth/indexing']
   });
-  const authClient = await auth.getClient();
-  
-  // 7. Process batch (up to daily limit)
-  const batchSize = Math.min(queue.length, CONFIG.dailyLimit);
-  const batch = queue.slice(0, batchSize);
-  console.log(`⚡ Processing batch of ${batchSize} URLs...`);
+  let authClient = await auth.getClient();
+  let indexing = google.indexing({ version: 'v3', auth: authClient });
 
-  const indexing = google.indexing({
-    version: 'v3',
-    auth: authClient
-  });
-
-  let successCount = 0;
-  for (let i = 0; i < batch.length; i++) {
-    const url = batch[i];
+  // Limit loop up to total queue size
+  while (urlIndex < queue.length) {
+    const url = queue[urlIndex];
     try {
-      const res = await indexing.urlNotifications.publish({
+      await indexing.urlNotifications.publish({
         requestBody: {
           url: url,
           type: 'URL_UPDATED'
         }
       });
       
-      console.log(`[${i + 1}/${batchSize}] ✅ Submitted: ${url}`);
+      console.log(`[+] Success (${successCount + 1}): ${url}`);
       fs.appendFileSync(CONFIG.stateFile, `${url}\n`, 'utf8');
       successCount++;
+      urlIndex++; // Move to next URL
       
-      // Delay slightly between requests to respect API rate limits
+      // Delay slightly between requests
       await new Promise(resolve => setTimeout(resolve, 300));
     } catch (err) {
-      console.error(`[${i + 1}/${batchSize}] ❌ Failed: ${url} | Error: ${err.message}`);
-      if (err.message.includes('Quota exceeded') || err.code === 429) {
-        console.error('\n🛑 Google Indexing API daily quota limit exceeded. Stopping execution.');
-        break;
+      const errMsg = err.message || '';
+      console.error(`[-] Failed: ${url} | Error: ${errMsg}`);
+      
+      // If quota exceeded or 429 rate limited, rotate the key!
+      if (errMsg.includes('Quota exceeded') || errMsg.includes('tooManyRequests') || err.code === 429) {
+        keyIndex++;
+        if (keyIndex >= keyFiles.length) {
+          console.error(`\n🛑 All ${keyFiles.length} key files have exceeded their daily quotas. Stopping execution.`);
+          break;
+        }
+        
+        currentKeyFile = keyFiles[keyIndex];
+        console.log(`\n🔄 Quota limit hit. Rotating to key [${keyIndex + 1}/${keyFiles.length}]: ${path.basename(currentKeyFile)}`);
+        
+        auth = new google.auth.GoogleAuth({
+          keyFile: currentKeyFile,
+          scopes: ['https://www.googleapis.com/auth/indexing']
+        });
+        authClient = await auth.getClient();
+        indexing = google.indexing({ version: 'v3', auth: authClient });
+        
+        // Do NOT increment urlIndex, so it retries the failed URL with the new key!
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      } else {
+        // For other errors (like permission denied / auth errors), skip the URL and move forward
+        urlIndex++;
       }
     }
   }
 
   console.log(`\n======================================================`);
   console.log(`🎉 Daily run complete! Successfully submitted ${successCount} URLs.`);
-  console.log(`📄 Total submitted so far: ${submitted.size + successCount}/${urls.length}`);
+  console.log(`💾 Total submitted so far: ${submitted.size + successCount}/${urls.length}`);
   console.log(`======================================================\n`);
 }
 
